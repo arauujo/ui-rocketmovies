@@ -1,6 +1,9 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FiArrowLeft } from 'react-icons/fi';
+import dayjs from 'dayjs';
+import utc from 'dayjs-plugin-utc';
+import timezone from 'dayjs/plugin/timezone.js';
 import { api } from '../../services/api';
 import { Header } from '../../components/Header';
 import { ButtonText } from '../../components/ButtonText';
@@ -10,6 +13,9 @@ import { Section } from '../../components/Section';
 import { MovieTag } from '../../components/MovieTag';
 import { Button } from '../../components/Button';
 import { Container, Form } from './styles';
+
+dayjs.extend(utc);
+dayjs.extend(timezone);
 
 export function New() {
   const [title, setTitle] = useState('');
@@ -43,12 +49,17 @@ export function New() {
           'Existe um marcador preenchido. Adicione-o antes ou deixe o campo vazio.'
         );
       }
+
+      const createdAt = dayjs().tz('America/Sao_Paulo').format();
+      const updatedAt = dayjs().tz('America/Sao_Paulo').format();
   
       await api.post('/movie_notes', {
         title,
         description,
         rating,
         movie_tags: movieTags,
+        created_at: createdAt,
+        updated_at: updatedAt,
       });
   
       alert('Filme adicionado com sucesso!');  
