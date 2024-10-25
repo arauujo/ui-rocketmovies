@@ -43,7 +43,7 @@ export function New() {
       if (!title) {
         return alert('Digite o título do filme.');
       }
-  
+
       if (newMovieTag) {
         return alert(
           'Existe um marcador preenchido. Adicione-o antes ou deixe o campo vazio.'
@@ -52,7 +52,7 @@ export function New() {
 
       const createdAt = dayjs().tz('America/Sao_Paulo').format();
       const updatedAt = dayjs().tz('America/Sao_Paulo').format();
-  
+
       await api.post('/movie_notes', {
         title,
         description,
@@ -61,8 +61,8 @@ export function New() {
         created_at: createdAt,
         updated_at: updatedAt,
       });
-  
-      alert('Filme adicionado com sucesso!');  
+
+      alert('Filme adicionado com sucesso!');
       navigate(-1);
     } catch (error) {
       if (error.response) {
@@ -130,15 +130,7 @@ export function New() {
               />
             </div>
           </Section>
-
-          <div className="buttons">
-            <Button
-              className="secondary"
-              title="Excluir filme"
-              onClick={handleBack}
-            />
-            <Button title="Salvar alterações" onClick={handleNewMovie} />
-          </div>
+          <Button title="Salvar alterações" onClick={handleNewMovie} />
         </Form>
       </main>
     </Container>
