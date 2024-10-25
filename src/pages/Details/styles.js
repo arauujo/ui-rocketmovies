@@ -5,7 +5,7 @@ export const Container = styled.div`
   height: 100vh;
 
   > main {
-    padding: 64px 0;
+    padding: 32px 0;
   }
 `;
 
@@ -18,10 +18,19 @@ export const Content = styled.div`
   flex-direction: column;
   overflow: auto;
 
-  > button {
+  > .buttons {
     display: flex;
-    align-items: center;
-    gap: 8px;
+    justify-content: space-between;
+
+    button:first-child {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button:last-child {
+      width: auto;
+    }
   }
 
   svg {
