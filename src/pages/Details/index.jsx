@@ -6,9 +6,10 @@ import { api } from '../../services/api';
 import { Loader } from '../../components/Loader';
 import { Header } from '../../components/Header';
 import { ButtonText } from '../../components/ButtonText';
+import { Button } from '../../components/Button';
 import { Tag } from '../../components/Tag';
 import { Rating } from '../../components/Rating';
-import avatarPlaceholder from '../../assets/avatar_placeholder.svg'
+import avatarPlaceholder from '../../assets/avatar_placeholder.svg';
 import { Container, Content } from './styles';
 
 export function Details() {
@@ -17,12 +18,21 @@ export function Details() {
   const hasFetchedData = useRef(false);
   const params = useParams();
   const navigate = useNavigate();
-  const formattedDate = dayjs(data.created_at).format('DD/MM/YY [às] HH:mm')
+  const formattedDate = dayjs(data.created_at).format('DD/MM/YY [às] HH:mm');
 
   function handleBack() {
     navigate(-1);
   }
-  
+
+  async function handleRemove() {
+    try {
+      await api.delete(`/movie_notes/${params.id}`);
+      navigate(-1);
+    } catch (error) {
+      alert('Erro ao deletar o filme', error);
+    }
+  }
+
   useEffect(() => {
     if (hasFetchedData.current) return; // Se já buscou os dados não executa novamente
     hasFetchedData.current = true; // Marca que os dados já foram buscados para evitar chamadas futuras
@@ -32,18 +42,18 @@ export function Details() {
         setData(response.data);
         setIsLoading(false); // Atualiza o estado de carregamento para falso quando o componente for montado
       } catch (error) {
-        alert("Erro ao buscar os dados:", error);
+        alert('Erro ao buscar os dados:', error);
       }
     }
-    
+
     fetchMovies();
   }, [params.id]);
-  
-  if (isLoading) return <Loader />
+
+  if (isLoading) return <Loader />;
 
   const avatarUrl = data.userData.avatar
-  ? `${api.defaults.baseURL}/files/${data.userData.avatar}`
-  : avatarPlaceholder;
+    ? `${api.defaults.baseURL}/files/${data.userData.avatar}`
+    : avatarPlaceholder;
 
   return (
     <Container>
@@ -51,9 +61,12 @@ export function Details() {
 
       <main>
         <Content>
-          <ButtonText isActive title="Voltar" onClick={handleBack}>
-            <FiArrowLeft />
-          </ButtonText>
+          <div className="buttons">
+            <ButtonText isActive title="Voltar" onClick={handleBack}>
+              <FiArrowLeft />
+            </ButtonText>
+            <Button title="Excluir filme" onClick={handleRemove} />
+          </div>
 
           <header>
             <h1>{data.title}</h1>
