@@ -6,6 +6,7 @@ import { Container, Form, Background } from './styles';
 import { Input } from '../../components/Input';
 import { Button } from '../../components/Button';
 import { ButtonText } from '../../components/ButtonText';
+import { ToastAlert, ModalAlert } from '../../components/SweetAlert';
 
 export function SignUp() {
   const [name, setName] = useState('');
@@ -15,19 +16,37 @@ export function SignUp() {
 
   function handleSignUp() {
     if (!name || !email || !password) {
-      return alert('É necessário preencher todos os campos!');
+      return ModalAlert({
+        icon: 'error',
+        title: 'Erro!',
+        text: 'É necessário preencher todos os campos!',
+      });
     }
 
-    api.post('/users', { name, email, password }).then(() => {
-      alert('Usuário cadastrado com sucesso!');
-      navigate('/');
-    }).catch(error => {
-      if (error.response) {
-        alert(error.response.data.message);
-      } else {
-        alert('Não foi possível cadastrar!');
-      }
-    });
+    api
+      .post('/users', { name, email, password })
+      .then(() => {
+        ToastAlert({
+          icon: 'success',
+          title: 'Usuário cadastrado com sucesso!',
+        });
+        navigate('/');
+      })
+      .catch(error => {
+        if (error.response) {
+          ModalAlert({
+            icon: 'error',
+            title: 'Erro!',
+            text: error.response.data.message,
+          });
+        } else {
+          ModalAlert({
+            icon: 'error',
+            title: 'Erro!',
+            text: 'Não foi possível cadastrar!',
+          });
+        }
+      });
   }
 
   function handleKeydown(evt) {

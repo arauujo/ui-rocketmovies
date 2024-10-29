@@ -1,5 +1,6 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { api } from '../services/api';
+import { ToastAlert, ModalAlert } from '../components/SweetAlert';
 
 export const AuthContext = createContext({});
 
@@ -19,9 +20,17 @@ function AuthProvider({ children }) {
       setData({ user, token });
     } catch (error) {
       if (error.response) {
-        alert(error.response.data.message);
+        ModalAlert({
+          icon: 'error',
+          title: 'Erro!',
+          text: error.response.data.message,
+        });
       } else {
-        alert('Não foi possível entrar!');
+        ModalAlert({
+          icon: 'error',
+          title: 'Erro!',
+          text: 'Não foi possível entrar!',
+        });
       }
     }
   }
@@ -47,12 +56,20 @@ function AuthProvider({ children }) {
       localStorage.setItem('@rocketmovies:user', JSON.stringify(user));
 
       setData({ user, token: data.token });
-      alert('Perfil atualizado!');
+      ToastAlert({ icon: 'success', title: 'Perfil atualizado!' });
     } catch (error) {
       if (error.response) {
-        alert(error.response.data.message);
+        ModalAlert({
+          icon: 'error',
+          title: 'Erro!',
+          text: error.response.data.message,
+        });
       } else {
-        alert('Não foi possível atualizar o perfil!');
+        ModalAlert({
+          icon: 'error',
+          title: 'Erro!',
+          text: 'Não foi possível atualizar o perfil!',
+        });
       }
     }
   }
@@ -72,7 +89,9 @@ function AuthProvider({ children }) {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ signIn, signOut, updateProfile, user: data.user }}>
+    <AuthContext.Provider
+      value={{ signIn, signOut, updateProfile, user: data.user }}
+    >
       {children}
     </AuthContext.Provider>
   );

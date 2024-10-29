@@ -12,6 +12,7 @@ import { Textarea } from '../../components/Textarea';
 import { Section } from '../../components/Section';
 import { MovieTag } from '../../components/MovieTag';
 import { Button } from '../../components/Button';
+import { ToastAlert, ModalAlert } from '../../components/SweetAlert';
 import { Container, Form } from './styles';
 
 dayjs.extend(utc);
@@ -41,13 +42,19 @@ export function New() {
   async function handleNewMovie() {
     try {
       if (!title) {
-        return alert('Digite o título do filme.');
+        return ModalAlert({
+          icon: 'error',
+          title: 'Erro!',
+          text: 'Digite o título do filme!',
+        });
       }
 
       if (newMovieTag) {
-        return alert(
-          'Existe um marcador preenchido. Adicione-o antes ou deixe o campo vazio.'
-        );
+        return ModalAlert({
+          icon: 'error',
+          title: 'Erro!',
+          text: 'Existe um marcador preenchido. Adicione-o antes ou deixe o campo vazio!',
+        });
       }
 
       const createdAt = dayjs().tz('America/Sao_Paulo').format();
@@ -62,13 +69,21 @@ export function New() {
         updated_at: updatedAt,
       });
 
-      alert('Filme adicionado com sucesso!');
+      ToastAlert({ title: 'Filme adicionado com sucesso!', icon: 'success' });
       navigate(-1);
     } catch (error) {
       if (error.response) {
-        alert(error.response.data.message);
+        ModalAlert({
+          icon: 'error',
+          title: 'Erro!',
+          text: error.response.data.message,
+        });
       } else {
-        alert('Não foi possível adicionar o filme!');
+        ModalAlert({
+          icon: 'error',
+          title: 'Erro!',
+          text: 'Não foi possível adicionar o filme!',
+        });
       }
     }
   }

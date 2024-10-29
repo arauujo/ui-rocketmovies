@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { FiArrowLeft, FiStar, FiClock } from 'react-icons/fi';
+import { FiArrowLeft, FiClock } from 'react-icons/fi';
 import dayjs from 'dayjs';
 import { api } from '../../services/api';
 import { Loader } from '../../components/Loader';
@@ -11,6 +11,7 @@ import { Tag } from '../../components/Tag';
 import { Rating } from '../../components/Rating';
 import avatarPlaceholder from '../../assets/avatar_placeholder.svg';
 import { Container, Content } from './styles';
+import { ToastAlert } from '../../components/SweetAlert';
 
 export function Details() {
   const [data, setData] = useState({});
@@ -27,9 +28,13 @@ export function Details() {
   async function handleRemove() {
     try {
       await api.delete(`/movie_notes/${params.id}`);
+      ToastAlert({ title: 'Filme removido com sucesso!', icon: 'success' });
       navigate(-1);
     } catch (error) {
-      alert('Erro ao deletar o filme', error);
+      ToastAlert({
+        title: `Erro ao deletar o filme: ${error.message}`,
+        icon: 'error',
+      });
     }
   }
 
@@ -42,7 +47,10 @@ export function Details() {
         setData(response.data);
         setIsLoading(false); // Atualiza o estado de carregamento para falso quando o componente for montado
       } catch (error) {
-        alert('Erro ao buscar os dados:', error);
+        ToastAlert({
+          title: `Erro ao buscar os dados: ${error.message}`,
+          icon: 'error',
+        });
       }
     }
 
