@@ -6,6 +6,6 @@ export const CustomSweetAlertStyles = createGlobalStyle`
   }
 
   .swal2-title, .swal2-html-container {
-    color: #E1E1E1;
+    color: #E1E1E1 !important;
   }
 `;
